@@ -83,3 +83,7 @@ CREATE TABLE transactions (
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (category_id) REFERENCES category (category_id)
 );
+
+INSERT INTO users (user_id, full_name, mail, passhash, user_role, user_status, created_at, updated_at) VALUES
+('rVAzYfbbeGLVmAE9lyY9i4U02YTxPW', 'Christian Arias ', 'arias@gmail.com', '$2b$12$M6lpSVYUIbtnfuyx7RS3ZO7uzG1QvkIvnmuQUXkHF42dsVuKldYcu', 'SuperAdmin', 1, '2024-08-13 21:28:41', '2024-08-13 16:28:41'),
+('XmDFJkhab26C1V0fmBekhodnmhcGcQ', 'Juanito Alimaña', 'juanito@3xample.com', '$2b$12$vHJ5ydFXJEgf/W25o0M.de7U9i1oWaYisKkJt92g/wYiJ4Qu7JQfq', 'Cliente', 1, '2024-08-20 02:45:22', '2024-08-19 21:45:22');
