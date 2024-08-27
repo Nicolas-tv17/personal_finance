@@ -13,3 +13,13 @@ def get_permissions(db: Session, rol:str, module: str):
     except SQLAlchemyError as e:
         print(f"Error al obtener permisos : {e}")
         raise HTTPException(status_code=500, detail="Error al obtener permisos ")
+    
+    
+def get_all_permissions(db: Session, rol:str):
+    try:
+        sql = text("SELECT module_name, p_select FROM permissions WHERE rol_name = :rol") 
+        result = db.execute(sql, {"rol": rol,}).fetchall()
+        return result
+    except SQLAlchemyError as e:
+        print(f"Error al obtener permisos : {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener permisos ")
