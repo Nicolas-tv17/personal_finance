@@ -27,4 +27,11 @@ class PaginatedUsersResponse(BaseModel):
     users: List[UserResponse]
     total_pages: int
     current_page: int
-    page_size: int   
+    page_size: int
+    
+class UserLoggin(UserBase):
+    user_id: str
+    
+class ResponseLoggin(BaseModel):
+    user: UserLoggin
+    access_token: str
