@@ -1,9 +1,9 @@
 from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from appv1.crud.users import get_user_by_email, get_user_by_id
+from appv1.crud.users import get_user_by_email, get_user_by_id, create_user_sql
 from appv1.crud.permissions import get_all_permissions
-from appv1.schemas.user import ResponseLoggin, UserLoggin
+from appv1.schemas.user import ResponseLoggin, UserLoggin, UserCreate
 from core.security import create_access_token, verify_password, verify_token
 from db.database import get_db
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -77,3 +77,14 @@ async def login_for_access_token(
         permissions=permisos,
         access_token=access_token
     )
+
+@router.post("/register")
+async def register_user(
+    user: UserCreate,
+    db: Session = Depends(get_db)
+):
+    user.user_role = 'Cliente'
+    respuesta = create_user_sql(db, user)
+    if respuesta:
+        return {"mensaje":"usuario registrado con éxito"}
+    
