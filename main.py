@@ -1,10 +1,12 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from db.database import test_db_connection
 from fastapi.middleware.cors import CORSMiddleware
 from appv1.routers import users, roles, categories, login
 
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 # Incluir routers
 
 app.include_router(users.router, prefix="/users", tags=["users"])

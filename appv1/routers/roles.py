@@ -1,28 +1,27 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from appv1.schemas.role import RolCreate, RolResponse
-from appv1.crud.roles import create_rol_sql, get_all_rol, get_rol_by_name
+from appv1.crud.permissions import get_permissions
+from appv1.crud.roles import get_roles
+from appv1.routers.login import get_current_user
+from appv1.schemas.role import RolBase
+from appv1.schemas.user import UserResponse
 from db.database import get_db
 
 router = APIRouter()
+MODULE = 'roles'
 
-@router.post("/create")
-async def insert_role(rol: RolCreate, db: Session = Depends(get_db)):
-    respuesta = create_rol_sql(db, rol)
-    if respuesta: 
-        return {"mensaje":"estoy usando el router de roles"}
+@router.get("/get-all/", response_model=List[RolBase])
+async def read_all_roles(
+    db: Session = Depends(get_db),
+    current_user: UserResponse = Depends(get_current_user)
+):
+    permisos = get_permissions(db, current_user.user_role, MODULE)
+    if not permisos.p_select:
+        raise HTTPException(status_code=401, detail="Usuario no autorizado")
     
-@router.get("/get-rol-by-name/", response_model=RolResponse)
-async def read_rol_by_name(rol_name: str, db: Session= Depends(get_db)):
-    rol = get_rol_by_name(db, rol_name)
-    if rol is None:
-        raise HTTPException(status_code=404, detail="Rol no encontrado")
-    return rol
-
-@router.get("/get-all/", response_model=List[RolResponse])
-async def read_all_rol(db: Session= Depends(get_db)):
-    roles = get_all_rol(db)
+    roles = get_roles(db)
     if len(roles) == 0:
-        raise HTTPException(status_code=404, detail="No hay roles")
+        raise HTTPException(status_code=404, detail="No hay usuarios")
+    
     return roles

@@ -40,3 +40,12 @@ class ResponseLoggin(BaseModel):
     user: UserLoggin
     permissions: List[PermissionsRol]
     access_token: str
+    
+class VerifyCode(BaseModel):
+    email: str
+    code: str
+
+class ChangePassword(BaseModel):
+    email: str
+    new_password: str
+    code: str
